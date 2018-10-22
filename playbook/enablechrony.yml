@@ -1,0 +1,29 @@
+- name: installChronyd
+  yum:
+    name: chrony
+    state: latest
+- name: chronyFileClient
+  copy:
+    src: /mine/chronydClient.conf
+    dest: /etc/chronyd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+- name: chronyFileServer
+  copy:
+    src: /mine/chronydClient.conf
+    dest: /etc/chronyd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+- name: enableChrony
+  service:
+    name: chronyd
+    state: enabled
+handlers:
+  - name: startChrony
+    service:
+      name: chronyd
+      state: started

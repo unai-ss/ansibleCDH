@@ -1,0 +1,5 @@
+[test]
+alias ansible_ssh_host=192.168.1.212
+alias ansible_ssh_host=192.168.1.213
+alias ansible_ssh_host=192.168.1.214
+alias ansible_ssh_host=<cambiar_ip>

@@ -1,0 +1,15 @@
+---
+- hosts: test
+  become: true
+  tasks:
+  - name: set JAVA_HOME
+      shell: export JAVA_HOME=/usr/java/jdk1.8.0_141-cloudera
+  # create a directory if it doesn't exist
+  - file:
+      path: /opt/cloudera/security/pki
+      state: directory
+      mode: 0755
+  - name: set keytool
+      shell: $JAVA_HOME/bin/keytool -genkeypair -alias $(hostname -f) -keyalg RSA -keystore /opt/cloudera/security/pki/$(hostname -f).jks -keysize 2048 -dname "CN=$(hostname -f),OU=Engineering,O=Cloudera,L=Palo Alto,ST=California,C=US" -ext san=dns:$(hostname -f)
+  - name: set keytool
+      shell: $JAVA_HOME/bin/keytool -certreq -alias $(hostname -f) -keystore /opt/cloudera/security/pki/$(hostname -f).jks -file /opt/cloudera/security/pki/$(hostname -f).csr -ext san=dns:$(hostname -f)

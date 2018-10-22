@@ -1,0 +1,17 @@
+---
+- hosts: test
+  remote_user: root
+  tasks:
+    - name: firewalldDown
+      service:
+        name: firewalld
+        state: down
+    - name: firewalldDisable
+      service:
+        name: firewalldDown
+        state: disable
+    - name: disableSELinux
+      command: /sbin/setenforce 0
+    - name: SELinuxdisabled
+      selinux:
+        state: disabled

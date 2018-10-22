@@ -1,0 +1,42 @@
+---
+- hosts: test
+  become: true
+  tasks:
+  - name: set JAVA_HOME
+      shell: export JAVA_HOME=/usr/java/jdk1.8.0_141-cloudera
+  # create a directory if it doesn't exist
+  - file:
+      path: /opt/cloudera/security/x509/
+      state: directory
+      mode: 0755
+  - file:
+      path: /opt/cloudera/security/jks/
+      state: directory
+      owner: cloudera-scm
+      group: cloudera-scm
+      mode: 0700
+
+  - name: set keytool
+    shell: $JAVA_HOME/bin/keytool -genkeypair -alias cmhost -keyalg RSA -keysize 2048 -dname "cn=cm01.example.com, ou=Department,o=Company, l=City, st=State, c=US" -keypass password -keystore example.jks -storepass password
+
+  - name: Ansible copy file to remote server
+    copy:
+      src: $JAVA_HOME/jre/lib/security/cacerts
+      dest: $JAVA_HOME/jre/lib/security/jssecacerts
+
+  - name: set keytool
+    shell: keytool -export -alias cmhost -keystore example.jks -rfc -file selfsigned.cer
+
+  - name: Ansible copy file to remote server
+    copy:
+      src: /opt/cloudera/security/jks/selfsigned.cer
+      dest: /opt/cloudera/security/x509/cmhost.pem
+
+  - name: set keytool
+    shell: keytool -import -alias cmhost -file /opt/cloudera/security/jks/selfsigned.cer -keystore $JAVA_HOME/jre/lib/security/jssecacerts -storepass changeit
+
+  - name: Move foo to bar
+    command: mv /opt/cloudera/security/jks/example.jks /opt/cloudera/security/jks/cmhost-keystore.jks
+
+  - name: Move foo to bar
+    command: rm /opt/cloudera/security/jks/selfsigned.cer

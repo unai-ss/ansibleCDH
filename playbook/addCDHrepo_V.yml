@@ -1,0 +1,17 @@
+---
+- hosts: test
+  become: true
+  tasks:
+    - name: Add repository Cloudera Manager 5
+      yum_repository:
+        name: Cloudera Manager
+        description: Cloudera Manager RHEL Centos YUM repo
+        baseurl: https://archive.cloudera.com/cm6/6.0.0/redhat7/yum/cloudera-manager.repo
+
+    - name: add repo
+      shell: rpm --import https://archive.cloudera.com/cm6/6.0.0/redhat7/yum/RPM-GPG-KEY-cloudera
+
+    - name: install Java 1.8
+      yum:
+        name: oracle-j2sdk1.8
+        state: latest

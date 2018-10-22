@@ -1,0 +1,16 @@
+---
+- hosts: test
+  become: true
+  tasks:
+  - name: Install a list of packages
+    yum:
+      name: dnsmasq
+      state: latest
+  - name: enableDNSmasq
+    service:
+      name: dnsmasq
+      state: enabled
+  - name: startDNSmasq
+    service:
+      name: dnsmasq
+      state: started

@@ -1,0 +1,11 @@
+---
+- hosts: test
+  become: true
+  tasks:
+- name: Install a list of packages
+  yum:
+    name:
+      - cloudera-manager-daemons
+      - cloudera-manager-agent
+      - cloudera-manager-server
+    state: latest

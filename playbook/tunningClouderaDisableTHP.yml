@@ -1,0 +1,11 @@
+- lineinfile:
+    state: present
+    dest: /etc/default/grub
+    backrefs: yes
+    regexp: '^(GRUB_CMDLINE_LINUX=(?!.*transparent_hugepage)\"[^\"]+)(\".*)'
+    line: '\1 transparent_hugepage=never\2'
+- name: reconfigure grub
+    shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+- name: vmswappiness
+    shell: sudo sysctl -w vm.swappiness=1
+     
